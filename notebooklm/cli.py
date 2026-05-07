@@ -17,7 +17,7 @@ console = Console()
 @app.command()
 def chat(
     files: list[Path] = typer.Argument(..., help="Documents to load (.txt, .md, .pdf)"),
-    model: str = typer.Option("claude-opus-4-7", "--model", "-m"),
+    model: str = typer.Option("claude-haiku-4-5-20251001", "--model", "-m"),
 ):
     """Load documents and start an interactive Q&A session."""
     nb = Notebook(model=model)
@@ -53,7 +53,7 @@ def chat(
 def ask(
     question: str = typer.Argument(...),
     files: list[Path] = typer.Option(..., "--file", "-f", help="Documents to load"),
-    model: str = typer.Option("claude-opus-4-7", "--model", "-m"),
+    model: str = typer.Option("claude-haiku-4-5-20251001", "--model", "-m"),
 ):
     """Ask a single question across documents (non-interactive)."""
     nb = Notebook(model=model)

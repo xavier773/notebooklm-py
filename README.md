@@ -1,3 +1,8 @@
+---
+created: 2026-04-24
+updated: 2026-04-24
+---
+
 # notebooklm-py
 
 本地版 NotebookLM — 使用 Claude API 對文件進行問答。

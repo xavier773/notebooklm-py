@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Iterator
 
@@ -7,19 +8,36 @@ import anthropic
 
 from .document import Document
 
-MODEL = "claude-opus-4-7"
+MODEL = "claude-haiku-4-5-20251001"
 SYSTEM = (
     "You are a research assistant. Answer questions using only the provided documents. "
     "Cite the document name when referencing specific information. "
     "If the answer cannot be found in the documents, say so clearly."
 )
 
+_KEY_FILE = Path.home() / ".claude" / "notebooklm_key"
+
+
+def _resolve_api_key() -> str:
+    # Claude Code sets ANTHROPIC_API_KEY="" in subprocesses — key file takes priority.
+    key_file_key = _KEY_FILE.read_text().strip() if _KEY_FILE.exists() else ""
+    if key_file_key:
+        return key_file_key
+    env_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
+    if env_key:
+        return env_key
+    raise RuntimeError(
+        f"No Anthropic API key found.\n"
+        f"Create {_KEY_FILE} with your API key (one line):\n"
+        f"  echo 'sk-ant-...' > {_KEY_FILE} && chmod 600 {_KEY_FILE}"
+    )
+
 
 class Notebook:
     def __init__(self, model: str = MODEL):
         self.model = model
         self.documents: list[Document] = []
-        self._client = anthropic.Anthropic()
+        self._client = anthropic.Anthropic(api_key=_resolve_api_key())
         self._history: list[dict] = []
 
     # ── documents ──────────────────────────────────────────────────────────
