@@ -50,6 +50,10 @@ class Notebook:
         self.documents.append(Document.from_text(text, name))
         return self
 
+    def add_youtube(self, url: str, lang: str = "zh-Hant,zh,en") -> "Notebook":
+        self.documents.append(Document.from_youtube(url, lang=lang))
+        return self
+
     def clear_documents(self) -> "Notebook":
         self.documents.clear()
         self._history.clear()
